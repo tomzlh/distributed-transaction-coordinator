@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ops.sc.mybatis.mapper.TransBranchInfoMapper">
+
+    <sql id="allColumnExceptId">
+        tid, branch_id, business_id, parent_name,status,caller_ip,branch_trans_name,branch_name,transaction_name,retry,retry_count,timeout,timeout_type,data_source,external_param,branch_param,return_param,timeout,timeout_type,has_parent,url,trans_mode,end_time,create_time, modify_time,order_no
+    </sql>
+
+    <resultMap id="transBranchInfoResult" type="scBranchRecord">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="tid" property="tid" jdbcType="BIGINT"/>
+        <result column="branch_id" property="bid" jdbcType="BIGINT"/>
+        <result column="business_id" property="businessId"/>
+        <result column="parent_name" property="parentName"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="caller_ip" property="callerIp"/>
+        <result column="branch_trans_name" property="branchTransName"/>
+        <result column="branch_name" property="branchName"/>
+        <result column="transaction_name" property="transactionName"/>
+        <result column="end_time" property="endTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="data_source" property="dataSource"/>
+        <result column="external_param" property="externalParam"/>
+        <result column="branch_param" property="branchParam"/>
+        <result column="return_param" property="returnParam"/>
+        <result column="retry" property="retry" jdbcType="TINYINT"/>
+        <result column="retry_count" property="retryCount" jdbcType="TINYINT"/>
+        <result column="timeout" property="timeout"/>
+        <result column="timeout_type" property="timeoutType"/>
+        <result column="has_parent" property="hasParent"/>
+        <result column="url" property="url"/>
+        <result column="rollback_param" property="rollbackParam"/>
+        <result column="trans_mode" property="transMode" jdbcType="TINYINT"/>
+        <result column="order_no" property="orderNo" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <insert id="save" parameterType="scBranchRecord" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO
+        tb_branch_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            tid, branch_id,business_id,parent_name,status,retry,retry_count,timeout,timeout_type,has_parent,trans_mode,create_time, modify_time,order_no
+            <if test="branchName != null">branch_name,</if>
+            <if test="branchTransName != null">branch_trans_name,</if>
+            <if test="transactionName != null">transaction_name,</if>
+            <if test="callerIp != null">caller_ip,</if>
+            <if test="dataSource != null">data_source,</if>
+            <if test="externalParam != null">external_param,</if>
+            <if test="branchParam != null">branch_param,</if>
+            <if test="returnParam != null">return_param,</if>
+            <if test="url != null">url,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="rollbackParam != null">rollback_param,</if>
+        </trim>
+
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{tid},#{bid},#{businessId},#{parentName},#{status},#{retry},#{retryCount},#{timeout},#{timeoutType},#{hasParent},#{transMode},#{createTime},#{modifyTime},#{orderNo},
+            <if test="branchName != null">#{branchName},</if>
+            <if test="branchTransName != null">#{branchTransName},</if>
+            <if test="transactionName != null">#{transactionName},</if>
+            <if test="callerIp != null">#{callerIp},</if>
+            <if test="dataSource != null">#{dataSource},</if>
+            <if test="externalParam != null">#{externalParam},</if>
+            <if test="branchParam != null">#{branchParam},</if>
+            <if test="returnParam != null">#{returnParam},</if>
+            <if test="url != null">#{url},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="rollbackParam != null">#{rollbackParam},</if>
+
+        </trim>
+        ;
+    </insert>
+
+    <insert id="batchSave" parameterType="java.util.List" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO tb_branch_info
+        (
+            tid, branch_id,business_id,parent_name,status,retry,retry_count,timeout,timeout_type,has_parent,trans_mode,create_time, modify_time,
+            branch_name, branch_trans_name, transaction_name, caller_ip, data_source, external_param, return_param, branch_param, url, end_time, rollback_param,order_no
+        )
+        VALUES
+        <foreach collection ="transBranchInfos" item="branchInfo" separator =",">
+        (
+                #{branchInfo.tid},#{branchInfo.bid},#{branchInfo.businessId},#{branchInfo.parentName},#{branchInfo.status},#{branchInfo.retry},#{branchInfo.retryCount},
+                #{branchInfo.timeout},#{branchInfo.timeoutType},#{branchInfo.hasParent},#{branchInfo.transMode},#{branchInfo.createTime},#{branchInfo.modifyTime},
+                #{branchInfo.branchName}, #{branchInfo.branchTransName}, #{branchInfo.transactionName}, #{branchInfo.callerIp}, #{branchInfo.dataSource},
+                #{branchInfo.externalParam}, #{branchInfo.returnParam}, #{branchInfo.branchParam}, #{branchInfo.url},
+                #{branchInfo.endTime}, #{branchInfo.rollbackParam},#{branchInfo.orderNo}
+         )
+        </foreach>
+    </insert>
+
+    <delete id="delete">
+        DELETE FROM tb_branch_info
+        WHERE tid = #{tid};
+    </delete>
+
+    <update id="update">
+        UPDATE tb_branch_info
+        <set>
+            <if test="modifyTime!=null">modify_time=#{modifyTime},</if>
+            <if test="status!=null">status=#{status},</if>
+            <if test="retryCount!=null">retry_count=#{retryCount},</if>
+            <if test="endTime!=null">end_time=#{endTime}</if>
+        </set>
+        WHERE id = #{id,jdbcType=BIGINT};
+    </update>
+
+    <update id="updateByBranchIdAndStatus">
+        UPDATE tb_branch_info
+        SET status = #{toStatus} , modify_time = #{now}
+        <where>
+            branch_id=#{branchId}
+            <if test="statusList!=null and statusList.size() > 0">
+                AND status IN
+                <foreach item="item" collection="statusList" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </update>
+
+    <update id="updateByBranchId">
+        UPDATE tb_branch_info
+        SET status = #{status}, retry_count = #{retryCount}, modify_time = #{modifyTime}
+        <where>
+             branch_id = #{bid}
+        </where>
+    </update>
+
+    <update id="updateStatusAndRetryCount">
+        UPDATE tb_branch_info
+        SET status = #{toStatus}, retry_count = #{retryCount}, modify_time = #{now}
+        WHERE id = #{id}
+        AND status IN
+        <foreach item="item" collection="statusList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        ;
+    </update>
+
+    <update id="updateStatusByBranchId">
+        UPDATE tb_branch_info
+        SET status = #{status}, modify_time = #{now}, retry_count = #{retryCount}
+        WHERE branch_id=#{branchId};
+    </update>
+
+
+    <sql id="transBranchInfoQueryParams_Sql">
+        <if test="id!=null">AND id=#{id}</if>
+        <if test="statusList!=null and statusList.size() > 0">
+            AND status IN
+            <foreach item="item" collection="statusList" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="tid!=null">AND tid=#{tid}</if>
+        <if test="branchId!=null">AND branch_id=#{branchId}</if>
+        ORDER BY create_time DESC, id DESC
+        <if test="page!=null">LIMIT #{page.offset} , #{page.limit}</if>
+        ;
+    </sql>
+
+    <select id="findByConditions" parameterType="com.ops.sc.common.bean.TransBranchInfoQueryParams"
+            resultMap="transBranchInfoResult">
+        SELECT id,
+        <include refid="allColumnExceptId"/>
+        FROM tb_branch_info
+        WHERE 1=1
+        <include refid="transBranchInfoQueryParams_Sql"/>
+    </select>
+
+    <select id="findById" resultMap="transBranchInfoResult">
+        SELECT id,
+        <include refid="allColumnExceptId"/>
+        FROM tb_branch_info
+        WHERE id = #{id,jdbcType=BIGINT};
+    </select>
+
+    <select id="findByTidAndBranchId" resultMap="transBranchInfoResult">
+        SELECT id,
+        <include refid="allColumnExceptId"/>
+        FROM tb_branch_info
+        WHERE tid = #{tid} AND branch_id = #{branchId};
+    </select>
+
+    <update id="updateStatusByBids">
+        UPDATE tb_branch_info
+        <set>
+            <if test="status!=null">
+                status=#{status},
+            </if>
+            <if test="modifyTime!=null">
+                modify_time=#{modifyTime}
+            </if>
+        </set>
+        WHERE bid IN
+        <foreach item="item" collection="bids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        ;
+    </update>
+
+
+    <select id="getBranchCountByGroupAndGlobalStatus" resultType="int">
+        SELECT COUNT(distinct tb_branch_info.id)
+        FROM tb_branch_info, tb_trans_info
+        WHERE tb_trans_info.status IN
+        <foreach item="item" collection="statusList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        AND tb_trans_info.trans_group_id IN
+        <foreach item="item" collection="groupIdList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        <if test="createTimeStart!=null">AND tb_trans_info.create_time &gt;= #{createTimeStart}</if>
+        AND tb_branch_info.tid = tb_trans_info.tid;
+    </select>
+
+    <select id="getBranchCountByGroupAndStatus" resultType="int">
+        SELECT COUNT(distinct tb_branch_info.id)
+        FROM tb_branch_info,tb_trans_info
+        WHERE tb_trans_info.trans_group_id IN
+        <foreach item="item" collection="groupIdList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        <if test="createTimeStart!=null">AND tb_trans_info.create_time &gt;= #{createTimeStart}</if>
+        AND tb_trans_info.tid = tb_branch_info.tid
+        AND tb_branch_info.status IN
+        <foreach item="item" collection="statusList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        ;
+    </select>
+
+</mapper>

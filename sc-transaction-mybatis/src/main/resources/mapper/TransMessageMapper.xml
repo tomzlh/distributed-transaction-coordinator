@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ops.sc.mybatis.mapper.TransMessageMapper">
+
+    <sql id="allColumnExceptId">
+        branch_id,tid,producer_id,meta_data,payload,create_time
+    </sql>
+
+    <resultMap id="transMessageResult" type="transMessage">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="branch_id" property="branchId"/>
+        <result column="tid" property="tid"/>
+        <result column="producer_id" property="producerId" javaType="Long"/>
+        <result column="meta_data" property="metaData" javaType="String"/>
+        <result column="payload" property="payload" jdbcType="VARCHAR" javaType="String"/>
+        <result column="create_time" property="createTime" javaType="java.util.Date"/>
+    </resultMap>
+
+    <insert id="save" parameterType="transMessage" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO
+        tb_trans_message (<include refid="allColumnExceptId"/>)
+        VALUES
+        (#{branchId},#{tid},#{producerId},#{metaData},#{payload},#{createTime});
+    </insert>
+
+    <select id="findByBranchId" resultMap="transMessageResult">
+        SELECT id,
+        <include refid="allColumnExceptId"/>
+        FROM tb_trans_message
+        WHERE branch_id = #{branchId};
+    </select>
+
+    <delete id="deleteByTid">
+        DELETE FROM tb_trans_message
+        WHERE tid = #{tid};
+    </delete>
+
+
+</mapper>

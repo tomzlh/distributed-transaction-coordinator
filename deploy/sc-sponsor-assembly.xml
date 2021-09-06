@@ -1,0 +1,54 @@
+<assembly>
+    <id>sponsor-assembly</id>
+    <includeBaseDirectory>true</includeBaseDirectory>
+    <formats>
+        <format>tar.gz</format>
+        <format>dir</format>
+    </formats>
+
+    <fileSets>
+        <fileSet>
+            <directory>${project.parent.basedir}/deploy/scripts/sponsor</directory>
+            <outputDirectory>bin</outputDirectory>
+            <includes>
+                <include>*</include>
+            </includes>
+            <fileMode>0755</fileMode>
+        </fileSet>
+        <!--<fileSet>
+            <directory>${project.parent.basedir}/sc-transaction-sponsor/src/main/resources</directory>
+            <outputDirectory>config</outputDirectory>
+            <includes>
+                <include>*</include>
+            </includes>
+        </fileSet>-->
+        <fileSet>
+            <directory>${project.parent.basedir}/sc-transaction-sponsor/src/main/resources/config</directory>
+            <outputDirectory>config</outputDirectory>
+            <includes>
+                <include>*</include>
+            </includes>
+            <fileMode>0644</fileMode>
+        </fileSet>
+        <fileSet>
+            <directory>${project.parent.basedir}/sc-transaction-sponsor/target/lib</directory>
+            <outputDirectory>lib</outputDirectory>
+        </fileSet>
+    </fileSets>
+
+    <!--<dependencySets>
+        <dependencySet>
+            <useProjectArtifact>true</useProjectArtifact>
+            <outputDirectory>lib</outputDirectory>
+        </dependencySet>
+    </dependencySets>-->
+
+    <files>
+        <file>
+            <source>${project.parent.basedir}/sc-transaction-sponsor/target/sc-transaction-sponsor-${project.version}.jar</source>
+            <outputDirectory>.</outputDirectory>
+            <destName>sc-transaction-sponsor-${project.version}.jar</destName>
+        </file>
+    </files>
+
+</assembly>

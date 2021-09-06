@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ops.sc.mybatis.mapper.TransLockMapper">
+    <sql id="allColumnExceptId">
+        tid,branch_id,table_name,pkey_value,create_time
+    </sql>
+
+    <resultMap id="transLock" type="transLock">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="tid" property="tid"/>
+        <result column="branch_id" property="branchId"/>
+        <result column="table_name" property="tableName"/>
+        <result column="pkey_value" property="primaryKeyValue"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <select id="queryTransLockList" resultMap="transLock">
+        SELECT tid,pkey_value
+        FROM trans_lock
+        WHERE table_name=#{tableName} AND pkey_value IN
+        <foreach item="item" index="index" collection="kvList"
+                 open="(" separator="," close=")">
+            #{item}
+        </foreach>;
+    </select>
+
+    <select id="queryTransLockListByTid" resultMap="transLock">
+        SELECT id,tid,branch_id,table_name,pkey_value,create_time
+        FROM trans_lock
+        WHERE tid=#{tid};
+    </select>
+
+    <insert id="insert" parameterType="transLock" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO
+        trans_lock (<include refid="allColumnExceptId"/>)
+        VALUES (#{tid},#{branchId},#{tableName}, #{primaryKeyValue}, #{createTime});
+    </insert>
+
+    <insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO
+        trans_lock (<include refid="allColumnExceptId"/>)
+        VALUES
+        <foreach collection="lockList" item="element" index="index" open="(" separator="),(" close=")">
+            #{element.tid},
+            #{element.branchId},
+            #{element.tableName},
+            #{element.primaryKeyValue},
+            #{element.createTime}
+        </foreach>
+    </insert>
+
+    <delete id="deleteByTidAndBranchId">
+        DELETE
+        FROM trans_lock
+        <where>
+            <if test="tid != null">
+                tid = #{tid}
+            </if>
+            <if test="branchId != null">
+                AND branch_id = #{branchId}
+            </if>
+        </where>
+    </delete>
+
+</mapper>

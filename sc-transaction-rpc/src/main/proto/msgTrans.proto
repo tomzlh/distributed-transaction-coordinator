@@ -1,0 +1,38 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "com.ops.sc.rpc.dto";
+option objc_class_prefix = "HLWS";
+
+import "parentResponse.proto";
+import "google/protobuf/wrappers.proto";
+
+message RegTransMsgRequest{
+     string requestId = 1;
+     string tid = 2; // 全局事务ID
+     string parentId = 3;
+     string callerIp = 4; // 调用方本机ip
+     string msgBody = 5; // 事务消息体
+     string extensionData = 6;
+     string producerId = 7; // 消息服务器信息全局唯一ID
+     string appName= 8; // 应用名称
+     bool supportNativeTransaction = 9;
+}
+
+message RegTransMsgResponse{
+     ParentResponse baseResponse = 1;
+
+     string branchId = 2;
+}
+
+message MQProducerRegRequest{
+     string requestId = 1;
+     google.protobuf.UInt32Value type = 2;
+
+     string config = 3;
+}
+
+message MQProducerRegResponse{
+     ParentResponse baseResponse = 1;
+
+    string producerId = 2;
+}

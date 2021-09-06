@@ -1,0 +1,25 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "com.ops.sc.rpc.dto";
+option objc_class_prefix = "HLWS";
+
+import "parentResponse.proto";
+
+message TransMessage{
+     string requestId = 1;
+     string tid = 2; // 全局事务ID
+     string transCode = 3; //交易码
+     string transName = 4; //交易名
+     string transType = 5; //交易类型
+     string msgTime = 6;
+     string multiTenancyId = 7; //多租户
+     string callerIp = 8; // 调用方本机ip
+     string msgBody = 9; // 事务消息体(json)
+     string extension = 10; // 统一JSON格式如{"exchange":xxx,"bindKey":xxx}，每次发送时用户指定
+     string appName= 11; // 应用名称
+}
+
+message TransResponse{
+     ParentResponse baseResponse = 1;
+     string tid =2;
+}

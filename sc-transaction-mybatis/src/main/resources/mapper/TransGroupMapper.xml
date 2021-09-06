@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ops.sc.mybatis.mapper.TransGroupMapper">
+    <sql id="allColumnExceptId">
+        trans_group_name, trans_group_id, tenant_id, create_time, modify_time
+    </sql>
+
+    <resultMap id="groupResult" type="transGroup">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="trans_group_name" property="groupName"/>
+        <result column="trans_group_id" property="groupId"/>
+        <result column="tenant_id" property="tenantId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+    </resultMap>
+
+    <sql id="transGroupQueryParams_Sql">
+        <if test="id!=null">AND id=#{id}</if>
+        <if test="groupId!=null">AND trans_group_id=#{groupId}</if>
+        <if test="tenantId!=null">AND tenant_id=#{tenantId}</if>
+        ORDER BY create_time DESC
+        <if test="page!=null">LIMIT #{page.offset} , #{page.limit}</if>
+        ;
+    </sql>
+    <select id="getGroupByGroupNameTenantId" resultMap="groupResult">
+        SELECT id,
+        <include refid="allColumnExceptId"/>
+        FROM tb_trans_group
+        WHERE trans_group_name=#{groupName} AND tenant_id=#{tenantId} AND is_invalid = 1;
+    </select>
+
+    <select id="getTransGroupByGroupId" resultMap="groupResult">
+        SELECT id,
+        <include refid="allColumnExceptId"/>
+        FROM tb_trans_group
+        WHERE trans_group_id=#{groupId} AND is_invalid = 1;
+    </select>
+
+
+
+    <insert id="save" parameterType="transGroup" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO
+        tb_trans_group (<include refid="allColumnExceptId"/>)
+        VALUES (#{groupName},#{groupId},#{tenantId}, #{createTime},#{modifyTime});
+    </insert>
+
+    <update id="update" parameterType="transGroup">
+        UPDATE tb_trans_group
+        <set>
+            <if test="groupId!=null">
+                trans_group_id=#{groupId},
+            </if>
+            <if test="modifyTime!=null">
+                modify_time=#{modifyTime}
+            </if>
+        </set>
+        WHERE id = #{id,jdbcType=BIGINT};
+    </update>
+
+    <update id="invalidGroup">
+        UPDATE tb_trans_group
+        SET is_invalid = 0
+        WHERE trans_group_id = #{groupId}
+        ;
+    </update>
+
+
+    <update id="resumeGroup">
+        UPDATE tb_trans_group
+        SET is_invalid = 1
+        WHERE trans_group_id = #{groupId}
+    </update>
+
+    <select id="getAllValidTransGroup" resultMap="groupResult">
+        SELECT id,
+        <include refid="allColumnExceptId"/>
+        FROM tb_trans_group
+        WHERE is_invalid = 1;
+    </select>
+
+    <delete id="delete">
+        DELETE
+        FROM tb_trans_group
+        WHERE trans_group_id = #{groupId}
+    </delete>
+
+    <select id="getGroupByTenantId" resultMap="groupResult">
+        SELECT id,
+        <include refid="allColumnExceptId"/>
+        FROM tb_trans_group
+        WHERE tenant_id = #{tenantId} AND is_invalid = 1;
+    </select>
+
+    <select id="getTransGroupByTenantIdAndGroupName" resultMap="groupResult">
+        SELECT id,
+        <include refid="allColumnExceptId"/>
+        FROM tb_trans_group
+        WHERE tenant_id = #{tenantId} AND trans_group_name = #{groupName} AND is_invalid = 1;
+    </select>
+
+    <select id="findByConditions" parameterType="com.ops.sc.common.bean.TransGroupQueryParams"
+            resultMap="groupResult">
+        SELECT id,
+        <include refid="allColumnExceptId"/>
+        FROM tb_trans_group
+        WHERE is_invalid = 1
+        <include refid="transGroupQueryParams_Sql"/>
+    </select>
+
+    <select id="getGroupCountByTenantId" resultType="int">
+        SELECT COUNT(id)
+        FROM tb_trans_group
+        WHERE tenant_id = #{tenantId} AND is_invalid = 1
+        ;
+    </select>
+
+</mapper>

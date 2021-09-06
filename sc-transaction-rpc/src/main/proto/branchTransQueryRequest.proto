@@ -1,0 +1,34 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "com.ops.sc.rpc.dto";
+option objc_class_prefix = "HLWS";
+
+import "google/protobuf/wrappers.proto";
+
+
+message BranchTransQueryRequestList {
+    repeated BranchTransQueryRequest branchTransQueryRequests = 1;
+}
+
+message BranchTransQueryRequest{
+    string requestId = 1;
+    string tid = 2;
+}
+
+message BranchTransInfoList {
+    repeated BranchTransInfo branchTransInfos=1;
+}
+
+message BranchTransInfo{
+    string branchId = 1;
+    string branchName = 2;
+    string requestId = 3;
+    string tid = 4;
+    repeated string parentId = 5;
+    bytes params = 6;
+    google.protobuf.UInt32Value status = 7;
+    string tranCode = 8;
+}
+
+
+

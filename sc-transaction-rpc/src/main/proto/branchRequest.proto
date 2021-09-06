@@ -1,0 +1,37 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "com.ops.sc.rpc.dto";
+option objc_class_prefix = "HLWS";
+
+import "parentResponse.proto";
+import "google/protobuf/wrappers.proto";
+
+
+message BranchTransRequest {
+    string businessId = 1;
+    string tid = 2;
+    string bid = 3;
+    string callerIp = 4; // 调用方本机ip
+    string branchTransName = 5; // 分支名字
+    message LockContext {
+        message KeyList {
+            repeated string keys = 1;
+        }
+        bool requireLock = 1;
+        string resourceId = 2;
+        map<string, KeyList> operateTableNames = 3;
+    }
+    LockContext lockContext = 6; // 锁相关内容
+    google.protobuf.UInt32Value operateType = 7;
+    google.protobuf.UInt32Value branchType = 8;
+}
+
+message BranchTransResponse {
+    ParentResponse baseResponse = 1;
+    string branchId = 2;
+    string businessId = 3;
+}
+
+
+
+

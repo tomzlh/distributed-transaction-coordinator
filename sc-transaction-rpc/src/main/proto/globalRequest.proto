@@ -1,0 +1,107 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "com.ops.sc.rpc.dto";
+option objc_class_prefix = "HLWS";
+
+import "parentResponse.proto";
+import "google/protobuf/wrappers.proto";
+
+
+message GlobalTransRequest {
+    string businessId = 1;
+    string transGroupId = 2;
+    string callerIp = 3; // 调用方ip
+    string appName = 4; // 应用名称
+    google.protobuf.UInt64Value timeout = 5; // 全局事务超时时间,单位ms
+    google.protobuf.UInt32Value callbackStrategy = 6;
+    google.protobuf.UInt32Value timeoutType = 7;
+    string transMode = 8; //事务模型
+    string dataSource = 9; // fmt模式
+    google.protobuf.UInt32Value callInParallel = 10;
+    string rollbackInfo=11;
+    string transType = 12;
+    string callMode = 13;
+
+    message BranchTransDetail {
+        string branchTransName = 1;
+        string branchName = 2;
+        string transactionName = 3;
+        map<string, string> branchParam = 4;
+        map<string, string> externalParam = 5;
+        bool hasParent = 6;
+        repeated string parentBranchNames = 7;
+        google.protobuf.UInt64Value timeout = 8;
+        google.protobuf.UInt32Value timeOutType = 9;
+        bool retryRequired = 10;
+        map<string, string> rollbackParam = 11;
+        repeated string returnParam = 12;
+    }
+
+    message MapValue {
+        repeated string value = 1;
+    }
+
+    repeated BranchTransDetail branchTransDetails=14;
+
+}
+
+message GlobalTransResponse {
+    ParentResponse baseResponse = 1;
+
+    string tid = 2;
+    google.protobuf.UInt64Value checkBackMetaId = 3;
+}
+
+
+message GlobalTransRollbackRequest {
+    string businessId = 1;
+    string tid = 2;
+    string transMode = 3;
+    bool isSync = 4;
+    google.protobuf.UInt64Value timeout = 5;
+    google.protobuf.UInt32Value timeOutType = 6;
+}
+
+message GlobalTransRollbackResponse {
+    ParentResponse baseResponse = 1;
+}
+
+
+message GlobalSagaTransRequest {
+    string businessId = 1;
+    string transGroupId = 2;
+    string callerIp = 3; // 调用方本机ip
+    string appName = 4; // 应用名称
+    google.protobuf.UInt64Value timeout = 5; // 全局事务超时时间, 单位ms
+    string transName = 6;
+    google.protobuf.UInt32Value timeoutType = 7;
+    string transMode = 8; //事务模型
+    string transType = 9;
+    string callMode = 10;
+
+    message BranchSagaTransDetail {
+        string branchTransName = 1;
+        string branchName = 2;
+        map<string, string> branchParam = 3;
+        map<string, string> branchRollbackParam = 4;
+        map<string, string> externalParam = 5;
+        bool hasParent = 6;
+        repeated string parentBranchNames = 7;
+        google.protobuf.UInt64Value timeout = 8;
+        bool retryRequired = 9;
+        google.protobuf.UInt32Value timeoutType = 10;
+        repeated string returnParam = 11;
+    }
+
+    message MapValue {
+        map<string,string> valueMap = 1;
+    }
+
+    repeated BranchSagaTransDetail branchTransDetails=12;
+
+}
+
+message GlobalSagaTransResponse {
+    ParentResponse baseResponse = 1;
+    string tid = 2;
+}

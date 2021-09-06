@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.ops.sc.rpc.grpc.callback";
+option java_outer_classname = "CallbackServiceProto";
+option objc_class_prefix = "HLW";
+
+
+message RpcCallBackRequest {
+    bool twoPCResult = 1;
+    string checkBackResult = 2; // 回查返回结果
+    string appName = 3;
+    string requestId = 4; // 请求唯一标识
+    int32 heartBeatTag = 5; //心跳标识.0: 正常请求 1: 注册连接 2：发送心跳
+    int32 code = 6; // 返回code，0:success, others: 发生异常
+}
+
+message RpcCallBackResponse {
+    int32 callBackType = 1; // commit还是rollBack
+    int32 branchType = 2; // 分支类型
+    string tid = 3; // 全局事务id
+    string branchId = 4; // 分支事务id
+    string dataSource = 5; //数据源，用于多数据源场景
+    string callBackInterface = 6; //回调接口
+    string callbackMethod = 7; //回调方法
+    bytes params = 8; //事务消息producerName以及TCC模式的参数
+    string requestId = 9; // 请求唯一标识
+    bool registerResult = 10; //注册成功标识
+    bool heartBeatResult = 11; //心跳返回
+    string appName = 12; //客户端唯一appName标识
+    string resourceId = 13;
+}
+
+
+service CallBackService {
+    rpc call (stream RpcCallBackRequest) returns (stream RpcCallBackResponse) {
+    }
+}
+
+
+
+
+
+
+

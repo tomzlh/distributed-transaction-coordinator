@@ -1,0 +1,2 @@
+com.ops.sc.core.rest.deserializer.factory.impl.JsonRequestBodyDeserializerFactory
+com.ops.sc.core.rest.deserializer.factory.impl.TextPlainRequestBodyDeserializerFactory

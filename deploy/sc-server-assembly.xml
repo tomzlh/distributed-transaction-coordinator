@@ -1,0 +1,73 @@
+<assembly>
+    <id>server-assembly</id>
+    <includeBaseDirectory>true</includeBaseDirectory>
+    <formats>
+        <format>tar.gz</format>
+        <format>dir</format>
+    </formats>
+
+    <fileSets>
+        <fileSet>
+            <directory>${project.parent.basedir}/deploy/scripts/server</directory>
+            <outputDirectory>bin</outputDirectory>
+            <includes>
+                <include>*</include>
+            </includes>
+            <fileMode>0755</fileMode>
+        </fileSet>
+        <!--<fileSet>
+            <directory>${project.parent.basedir}/sc-transaction-server/src/main/resources</directory>
+            <outputDirectory>config</outputDirectory>
+            <includes>
+                <include>*</include>
+            </includes>
+        </fileSet>-->
+        <fileSet>
+            <directory>${project.parent.basedir}/sc-transaction-server/src/main/resources/config</directory>
+            <outputDirectory>config</outputDirectory>
+            <includes>
+                <include>*</include>
+            </includes>
+            <fileMode>0644</fileMode>
+        </fileSet>
+        <fileSet>
+            <directory>${project.parent.basedir}/sc-transaction-server/target/lib</directory>
+            <outputDirectory>lib</outputDirectory>
+        </fileSet>
+    </fileSets>
+
+    <!--<dependencySets>
+        <dependencySet>
+            <useProjectArtifact>true</useProjectArtifact>
+            <outputDirectory>lib</outputDirectory>
+        </dependencySet>
+    </dependencySets>-->
+
+    <files>
+        <!--<file>
+            <source>${project.parent.basedir}/sc-transaction-rpc/target/sc-transaction-rpc-${project.version}.jar</source>
+            <outputDirectory>.</outputDirectory>
+            <destName>sc-transaction-rpc-${project.version}.jar</destName>
+        </file>
+        <file>
+            <source>${project.parent.basedir}/sc-transaction-common/target/sc-transaction-common-${project.version}.jar</source>
+            <outputDirectory>.</outputDirectory>
+            <destName>sc-transaction-common-${project.version}.jar</destName>
+        </file>
+        <file>
+            <source>${project.parent.basedir}/sc-transaction-core/target/sc-transaction-core-${project.version}.jar</source>
+            <outputDirectory>.</outputDirectory>
+            <destName>sc-transaction-core-${project.version}.jar</destName>
+        </file>
+        <file>
+            <source>${project.parent.basedir}/sc-transaction-mybatis/target/sc-transaction-mybatis-${project.version}.jar</source>
+            <outputDirectory>.</outputDirectory>
+            <destName>sc-transaction-mybatis-${project.version}.jar</destName>
+        </file>-->
+        <file>
+            <source>${project.parent.basedir}/sc-transaction-server/target/sc-transaction-server-${project.version}.jar</source>
+            <outputDirectory>.</outputDirectory>
+        </file>
+    </files>
+
+</assembly>

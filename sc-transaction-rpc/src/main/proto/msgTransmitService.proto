@@ -1,0 +1,16 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "com.ops.sc.rpc.grpc";
+option java_outer_classname = "TransmitService";
+option objc_class_prefix = "HLWS";
+
+option java_generic_services = true;
+
+import "msgTransmitBody.proto";
+import "stateService.proto";
+
+service TransTransmitService {
+    rpc transmitTransMsg(TransMessage) returns (TransResponse) {}
+    rpc stateCheck(StateServiceRequest) returns (StateServiceResponse) {}
+}
+

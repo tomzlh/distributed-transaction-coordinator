@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ops.sc.mybatis.mapper.TransMqProducerMapper">
+
+    <sql id="allColumnExceptId">
+         type, config, last_use_time, create_time
+    </sql>
+
+    <resultMap id="mqProducerResult" type="transMqProducer">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="type" property="type"/>
+        <result column="config" property="config"/>
+        <result column="last_use_time" property="lastUseTime"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <insert id="save" parameterType="transMqProducer" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO
+        tb_trans_mq_producer (<include refid="allColumnExceptId"/>)
+        VALUES
+        (#{type},#{config},#{lastUseTime},#{createTime});
+    </insert>
+
+    <select id="findById" resultMap="mqProducerResult">
+        SELECT id,
+        <include refid="allColumnExceptId"/>
+        FROM tb_trans_mq_producer
+        WHERE id=#{id};
+    </select>
+
+
+    <select id="findIdByAllFields" parameterType="transMqProducer" resultType="long">
+        SELECT id
+        FROM tb_trans_mq_producer
+        <where>
+            <if test="type != null">AND type = #{type}</if>
+            <if test="config != null">AND config = #{config}</if>
+        </where>
+    </select>
+
+    <update id="updateLastUseTime">
+        UPDATE tb_trans_mq_producer
+        SET last_use_time = #{lastUseTime}
+        WHERE id = #{id};
+    </update>
+</mapper>

@@ -1,0 +1,20 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "com.ops.sc.rpc.dto";
+option objc_class_prefix = "HLWS";
+
+import "parentResponse.proto";
+import "google/protobuf/wrappers.proto";
+
+message StateServiceRequest {
+    string tid = 1;
+    string branchId = 2;
+    string businessId =3;
+}
+
+message StateServiceResponse {
+    ParentResponse baseResponse = 1;
+    google.protobuf.UInt32Value status = 2;
+}
+
+

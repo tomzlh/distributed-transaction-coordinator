@@ -1,0 +1,25 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "com.ops.sc.rpc.dto";
+option objc_class_prefix = "HLWS";
+
+import "parentResponse.proto";
+import "google/protobuf/wrappers.proto";
+
+
+message TransCompensationRequest {
+    string businessId = 1;
+    string tid = 2;
+    string callerIp = 3; // 调用方本机ip
+    string appName = 4; // 应用名称
+}
+
+message TransCompensationResponse {
+    ParentResponse baseResponse = 1;
+    string tid = 2;
+    string businessId = 3;
+}
+
+
+
+

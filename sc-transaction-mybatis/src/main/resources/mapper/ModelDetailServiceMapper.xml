@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ops.sc.mybatis.mapper.ModelDetailServiceMapper">
+    <sql id="allColumnExceptId">
+        model_id,model_branch_name,branch_name,retry_required,timeout,timeout_type,parent_names,has_parent,request_params,external_params,response_params,create_time,update_time,is_invalid
+    </sql>
+
+    <resultMap id="transResult" type="transModelDetail">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="model_id" property="modelId" jdbcType="BIGINT"/>
+        <result column="model_branch_name" property="modelBranchName"/>
+        <result column="branch_name" property="branchName"/>
+        <result column="retry_required" property="retryRequired"/>
+        <result column="timeout" property="timeout"/>
+        <result column="timeout_type" property="timeoutType"/>
+        <result column="parent_names" property="parentNames"/>
+        <result column="has_parent" property="hasParent"/>
+        <result column="request_params" property="requestParams"/>
+        <result column="external_params" property="externalParams"/>
+        <result column="response_params" property="resParams"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="is_invalid" property="isInvalid"/>
+    </resultMap>
+
+    <select id="findAllModelsById" resultMap="transResult">
+        SELECT id,
+        <include refid="allColumnExceptId"/>
+        FROM tb_trans_model_detail
+        WHERE id=#{id} AND is_invalid = 1;
+    </select>
+
+    <select id="findModelByModelId" resultMap="transResult">
+        SELECT id,
+        <include refid="allColumnExceptId"/>
+        FROM tb_trans_model_detail
+        WHERE model_id=#{modelId} AND is_invalid = 1;
+    </select>
+
+</mapper>

@@ -1,0 +1,11 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "com.ops.sc.rpc.dto";
+option objc_class_prefix = "HLWS";
+
+// 父response
+message ParentResponse{
+    string message = 1;
+    string code = 2;
+    string businessId = 3;
+}

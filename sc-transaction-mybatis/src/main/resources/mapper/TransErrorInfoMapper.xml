@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ops.sc.mybatis.mapper.TransErrorInfoMapper">
+    <sql id="allColumnExceptId">
+        tid, branch_id, error_type, error_detail, create_time, modify_time
+    </sql>
+
+    <resultMap id="errorInfoResult" type="transErrorInfo">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <id column="tid" property="tid"/>
+        <id column="branch_id" property="branchId"/>
+        <id column="error_type" property="errorType"/>
+        <id column="error_detail" property="errorDetail"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+    </resultMap>
+
+
+    <insert id="save" parameterType="transErrorInfo" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO
+        tb_error_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            tid, error_type, error_detail, create_time, modify_time,
+
+            <if test="branchId != null">branch_id,</if>
+
+        </trim>
+
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{tid},#{errorType}, #{errorDetail}, #{createTime},#{modifyTime},
+
+            <if test="branchId != null">#{branchId},</if>
+
+        </trim>
+        ;
+    </insert>
+
+    <select id="findBranchTransErrorInfoByTidAndBranchId" resultMap="errorInfoResult">
+        SELECT id,
+        <include refid="allColumnExceptId"/>
+        FROM tb_error_info
+        WHERE tid = #{tid} AND branch_id = #{branchId}
+        ORDER BY modify_time DESC;
+    </select>
+
+    <delete id="delete">
+        DELETE FROM tb_error_info
+        WHERE tid = #{tid};
+    </delete>
+
+    <update id="updateErrorInfoById">
+        UPDATE tb_error_info
+        SET error_type = #{errorType}, error_detail = #{errorDetail}, modify_time = #{modifyTime}
+        WHERE id = #{id};
+    </update>
+
+</mapper>

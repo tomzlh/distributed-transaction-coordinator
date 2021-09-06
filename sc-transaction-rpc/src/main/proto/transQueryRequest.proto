@@ -1,0 +1,58 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "com.ops.sc.rpc.dto";
+option objc_class_prefix = "HLWS";
+
+import "parentResponse.proto";
+import "google/protobuf/wrappers.proto";
+
+
+message TransQueryRequest {
+    string businessId = 1;
+}
+
+message TransQueryResponse {
+    ParentResponse baseResponse = 1;
+
+    string businessId = 2;
+    string tid = 3;
+    string transGroupId = 4;
+    string callerIp = 5; // 调用方ip
+    string appName = 6; // 应用名称
+    google.protobuf.UInt64Value timeout = 7; // 全局事务超时时间,单位ms
+    google.protobuf.UInt32Value callbackStrategy = 8;
+    google.protobuf.UInt32Value timeoutType = 9;
+    string transMode = 10; //事务模型
+    string dataSource = 11; // fmt模式
+    google.protobuf.UInt32Value callInParallel = 12;
+    string rollbackInfo = 13;
+    string transType = 14;
+    string callMode = 15;
+    string status = 16;
+    string create_time = 17;
+    string end_time =18;
+
+    message BranchTransResponse {
+        string bid=1;
+        string branchAppName = 2;
+        string branchName = 3;
+        string transactionName = 4;
+        string url = 5;
+        string commitMethod = 6;
+        string rollbackMethod = 7;
+        map<string, string> branchParam = 8;
+        map<string, string> externalParam = 9;
+        bool hasParent = 10;
+        repeated string parentBranchNames = 11;
+        google.protobuf.UInt64Value timeout = 12;
+        google.protobuf.UInt32Value timeOutType = 13;
+        bool retryRequired = 14;
+        map<string, string> rollbackParam = 15;
+        repeated string returnParam = 16;
+        string status = 17;
+        string create_time = 18;
+        string end_time =19;
+    }
+    repeated BranchTransResponse branchTransDetails = 19;
+}
+

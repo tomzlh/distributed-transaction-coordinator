@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ops.sc.mybatis.mapper.TransInfoMapper">
+
+    <sql id="allColumnExceptId">
+        tid, trans_group_id, business_id,status,caller_ip,timeout,timeout_type,app_name,trans_mode,call_in_parallel,roll_back_info,callback_strategy,retry_count,end_time, create_time, modify_time,data_source
+    </sql>
+
+    <delete id="delete">
+        DELETE FROM tb_trans_info
+        WHERE tid = #{tid};
+    </delete>
+
+    <resultMap id="transInfoResult" type="scTransRecord">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="tid" property="tid"/>
+        <result column="trans_group_id" property="groupId"/>
+        <result column="business_id" property="businessId"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="caller_ip" property="callerIp"/>
+        <result column="timeout" property="timeout"/>
+        <result column="timeout_type" property="timeoutType"/>
+        <result column="app_name" property="appName"/>
+        <result column="trans_mode" property="transMode"/>
+        <result column="call_in_parallel" property="callInParallel"/>
+        <result column="callback_strategy" property="callbackStrategy"/>
+        <result column="retry_count" property="retryCount" jdbcType="TINYINT"/>
+        <result column="end_time" property="endTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="data_source" property="dataSource"/>
+        <result column="roll_back_info" property="rollBackInfo"/>
+    </resultMap>
+
+    <insert id="save" parameterType="scTransRecord" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO
+        tb_trans_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            tid, trans_group_id,
+            status,caller_ip,timeout,timeout_type,app_name,callback_strategy,call_in_parallel,roll_back_info,create_time,
+            modify_time,retry_count,data_source,
+
+            <if test="endTime != null">end_time,</if>
+
+            <if test="businessId != null">business_id,</if>
+
+            <if test="transMode != null">trans_mode,</if>
+        </trim>
+
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #{tid},#{groupId},#{status},#{callerIp},#{timeout},#{timeoutType},#{appName},#{callbackStrategy},#{callInParallel},#{rollBackInfo},#{createTime},#{modifyTime},
+            #{retryCount}, #{dataSource},
+
+            <if test="endTime != null">#{endTime},</if>
+
+            <if test="businessId != null">#{businessId},</if>
+
+            <if test="transMode != null">#{transMode},</if>
+        </trim>
+        ;
+    </insert>
+
+    <update id="update" parameterType="scTransRecord">
+        UPDATE tb_trans_info
+        <set>
+            <if test="status!=null">
+                status=#{status},
+            </if>
+            <if test="modifyTime!=null">
+                modify_time=#{modifyTime},
+            </if>
+            <if test="endTime!=null">
+                end_time=#{endTime}
+            </if>
+            <if test="retryCount!=null">
+                retry_count=#{retryCount}
+            </if>
+        </set>
+        WHERE tid = #{tid,jdbcType=BIGINT};
+    </update>
+
+
+    <update id="updateStatusByTid">
+        UPDATE tb_trans_info
+        <set>
+            <if test="status!=null">
+                status=#{status},
+            </if>
+            <if test="modifyTime!=null">
+                modify_time=#{modifyTime}
+            </if>
+        </set>
+        WHERE tid = #{tid};
+    </update>
+
+    <sql id="transInfoQueryParams_Sql">
+        <if test="id!=null">AND id=#{id}</if>
+        <if test="statusList!=null and statusList.size() > 0">AND status IN
+            <foreach item="item" collection="statusList" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="groupIdList!=null and groupIdList.size()>0">AND trans_group_id IN
+            <foreach item="item" collection="groupIdList" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="tid!=null">AND tid=#{tid}</if>
+        <if test="businessId!=null">AND business_id=#{businessId}</if>
+        <if test="appName!=null">AND app_name=#{appName}</if>
+        <if test="createTimeStart!=null">AND create_time &gt;= #{createTimeStart}</if>
+        <if test="createTimeEnd!=null">AND create_time&lt;=#{createTimeEnd}</if>
+        <if test="maxEndTime!=null">AND end_time&lt;=#{maxEndTime}</if>
+        <if test="maxId != null">AND id &lt; #{maxId}</if>
+        ORDER BY create_time DESC, id DESC
+        <if test="page!=null">LIMIT #{page.offset} , #{page.limit}</if>
+        ;
+    </sql>
+
+    <select id="findByConditions" parameterType="com.ops.sc.common.bean.TransInfoQueryParams"
+            resultMap="transInfoResult">
+        SELECT id,
+        <include refid="allColumnExceptId"/>
+        FROM tb_trans_info
+        WHERE 1=1
+        <include refid="transInfoQueryParams_Sql"/>
+    </select>
+
+    <select id="getCountByConditions" parameterType="com.ops.sc.common.bean.TransInfoQueryParams"
+            resultType="int">
+        SELECT COUNT(id)
+        FROM tb_trans_info
+        WHERE 1=1
+        <include refid="transInfoQueryParams_Sql"/>
+    </select>
+
+    <select id="findById" resultMap="transInfoResult">
+        SELECT id,
+        <include refid="allColumnExceptId"/>
+        FROM tb_trans_info
+        WHERE id=#{id};
+    </select>
+
+    <select id="findByTid" resultMap="transInfoResult">
+        SELECT id,
+        <include refid="allColumnExceptId"/>
+        FROM tb_trans_info
+        WHERE tid=#{tid};
+    </select>
+
+    <select id="findByBusinessId" resultMap="transInfoResult">
+        SELECT id,
+        <include refid="allColumnExceptId"/>
+        FROM tb_trans_info
+        WHERE business_id=#{businessId};
+    </select>
+
+    <select id="findByStatus" resultMap="transInfoResult">
+        SELECT id,
+        <include refid="allColumnExceptId"/>
+        FROM tb_trans_info
+        WHERE status IN
+        <foreach item="item" collection="statusList" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        ;
+    </select>
+
+    <update id="updateStatusByTidAndStatus">
+        UPDATE tb_trans_info
+        <set>
+            <if test="toStatus!=null">
+                status=#{toStatus},
+            </if>
+            <if test="modifyTime!=null">
+                modify_time=#{modifyTime}
+            </if>
+        </set>
+        WHERE tid = #{tid}
+        <if test="fromStatus!=null">
+          AND status = #{fromStatus}
+        </if>
+        ;
+    </update>
+
+    <update id="updateStatusByTids">
+        UPDATE tb_trans_info
+        <set>
+            <if test="status!=null">
+                status=#{status},
+            </if>
+            <if test="modifyTime!=null">
+                modify_time=#{modifyTime}
+            </if>
+        </set>
+        WHERE tid IN
+        <foreach item="item" collection="tids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        ;
+    </update>
+
+    <update id="updateStatusAndRetryCount">
+        UPDATE tb_trans_info
+        SET status = #{toStatus}, retry_count = #{retryCount}, modify_time = #{now}
+        WHERE tid = #{tid}
+        <if test="fromStatus!=null">
+            AND status = #{fromStatus}
+        </if>
+        ;
+    </update>
+
+</mapper>

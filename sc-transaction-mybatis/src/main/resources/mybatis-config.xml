@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <settings>
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <setting name="aggressiveLazyLoading" value="false"/>
+        <setting name="useGeneratedKeys" value="true"/>
+    </settings>
+
+    <typeAliases>
+        <typeAlias alias="transGroup" type="com.ops.sc.common.model.TransGroup"/>
+        <typeAlias alias="scTransRecord" type="com.ops.sc.common.store.ScTransRecord"/>
+        <typeAlias alias="scBranchRecord" type="com.ops.sc.common.store.ScBranchRecord"/>
+        <typeAlias alias="transMqProducer" type="com.ops.sc.common.model.TransMQProducer"/>
+        <typeAlias alias="transMessage" type="com.ops.sc.common.model.TransMessage"/>
+        <typeAlias alias="transErrorInfo" type="com.ops.sc.common.model.TransErrorInfo"/>
+        <typeAlias alias="transLock" type="com.ops.sc.common.model.TransLock"/>
+        <typeAlias alias="transModelDetail" type="com.ops.sc.common.model.ModelDetailDo"/>
+        <typeAlias alias="transModel" type="com.ops.sc.common.model.TransactionModelDo"/>
+    </typeAliases>
+
+</configuration>

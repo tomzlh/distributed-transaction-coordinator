@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ops.sc.mybatis.mapper.ModelServiceMapper">
+    <sql id="allColumnExceptId">
+        trans_code, trans_group_id, trans_mode, call_mode, model_name, timeout, timeout_type, create_time, update_time, remark,is_invalid
+    </sql>
+
+    <resultMap id="transResult" type="transModel">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="trans_code" property="transCode"/>
+        <result column="trans_group_id" property="transGroupId"/>
+        <result column="trans_mode" property="transMode"/>
+        <result column="call_mode" property="callMode"/>
+        <result column="model_name" property="modelName"/>
+        <result column="timeout" property="timeout"/>
+        <result column="timeout_type" property="timeoutType"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="remark" property="remark"/>
+        <result column="is_invalid" property="isInvalid"/>
+    </resultMap>
+
+    <select id="findByTransCode" resultMap="transResult">
+        SELECT id,
+        <include refid="allColumnExceptId"/>
+        FROM tb_trans_model
+        WHERE trans_code=#{transCode} AND is_invalid = 1;
+    </select>
+
+    <select id="loadAllTransModel" resultMap="transResult">
+        SELECT id,
+        <include refid="allColumnExceptId"/>
+        FROM tb_trans_model
+        WHERE is_invalid = 1;
+    </select>
+
+</mapper>

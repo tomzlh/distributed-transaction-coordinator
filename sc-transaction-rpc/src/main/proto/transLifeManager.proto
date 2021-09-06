@@ -1,0 +1,28 @@
+syntax = "proto3";
+option java_multiple_files = true;
+option java_package = "com.ops.sc.rpc.grpc";
+option java_outer_classname = "TMService";
+option objc_class_prefix = "HLWS";
+
+option java_generic_services = true;
+
+import "branchRequest.proto";
+import "globalRequest.proto";
+import "msgTrans.proto";
+import "stateService.proto";
+import "transQueryRequest.proto";
+import "transCompensationRequest.proto";
+
+service TransactionManager {
+    rpc startBranchTrans(BranchTransRequest) returns (BranchTransResponse) {}
+    rpc startGlobalTrans(GlobalTransRequest) returns (GlobalTransResponse) {}
+    rpc startSagaGlobalTrans(GlobalSagaTransRequest) returns (GlobalSagaTransResponse) {}
+    rpc rollbackGlobalTrans(GlobalTransRollbackRequest) returns (GlobalTransRollbackResponse) {}
+    rpc regTransMsg(RegTransMsgRequest) returns (RegTransMsgResponse) {}
+    rpc registerProducer(MQProducerRegRequest) returns (MQProducerRegResponse) {}
+    rpc stateCheck(StateServiceRequest) returns (StateServiceResponse) {}
+    rpc findGlobalTrans(TransQueryRequest) returns (TransQueryResponse) {}
+    rpc executeBranchTrans(BranchTransRequest) returns (BranchTransResponse) {}
+    rpc compensateTrans(TransCompensationRequest) returns (TransCompensationResponse) {}
+}
+

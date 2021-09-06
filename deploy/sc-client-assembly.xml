@@ -1,0 +1,58 @@
+<assembly>
+    <id>client-assembly</id>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <formats>
+        <format>tar.gz</format>
+        <format>dir</format>
+    </formats>
+
+    <fileSets>
+        <fileSet>
+            <directory>${project.parent.basedir}/deploy/scripts/actuator</directory>
+            <outputDirectory>bin</outputDirectory>
+            <includes>
+                <include>*</include>
+            </includes>
+            <fileMode>0755</fileMode>
+        </fileSet>
+        <fileSet>
+            <directory>${project.parent.basedir}/sc-transaction-actuator/src/main/resources/config</directory>
+            <outputDirectory>config</outputDirectory>
+            <includes>
+                <include>*</include>
+            </includes>
+            <fileMode>0644</fileMode>
+        </fileSet>
+        <fileSet>
+            <directory>${project.parent.basedir}/sc-transaction-actuator/target/lib</directory>
+            <outputDirectory>lib</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>${project.parent.basedir}/sc-transaction-actuator/target/extlib</directory>
+            <outputDirectory>extlib</outputDirectory>
+        </fileSet>
+    </fileSets>
+
+    <files>
+       <!-- <file>
+            <source>${project.parent.basedir}/sc-transaction-rpc/target/sc-transaction-rpc-${project.version}.jar</source>
+            <outputDirectory>.</outputDirectory>
+            <destName>sc-transaction-rpc-${project.version}.jar</destName>
+        </file>-->
+        <file>
+            <source>${project.parent.basedir}/sc-transaction-common/target/sc-transaction-common-${project.version}.jar</source>
+            <outputDirectory>.</outputDirectory>
+            <destName>sc-transaction-common-${project.version}.jar</destName>
+        </file>
+        <file>
+            <source>${project.parent.basedir}/sc-transaction-core/target/sc-transaction-core-${project.version}.jar</source>
+            <outputDirectory>.</outputDirectory>
+            <destName>sc-transaction-core-${project.version}.jar</destName>
+        </file>
+        <file>
+            <source>${project.parent.basedir}/sc-transaction-actuator/target/sc-transaction-actuator-${project.version}.jar</source>
+            <outputDirectory>.</outputDirectory>
+        </file>
+    </files>
+
+</assembly>
