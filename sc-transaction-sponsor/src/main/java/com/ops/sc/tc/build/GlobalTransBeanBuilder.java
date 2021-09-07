@@ -90,7 +90,7 @@ public class GlobalTransBeanBuilder {
         requestBuilder.setBusinessId(globalTransRequest.getBusinessId());
         requestBuilder.setTimeout(UInt64Value.of(globalTransRequest.getTimeout()));
         requestBuilder.setTimeoutType(UInt32Value.of(TimeoutType.valueOf(globalTransRequest.getTimeoutType()).getValue()));
-        requestBuilder.setCallMode(globalTransRequest.getCallMode());
+        //requestBuilder.setCallMode(globalTransRequest.getCallMode());
         requestBuilder.setTransGroupId(globalTransRequest.getTransGroupId());
         requestBuilder.setTransMode(globalTransRequest.getTransMode());
         requestBuilder.setTransType(TransactionType.TRANSACTION.name());
@@ -115,7 +115,7 @@ public class GlobalTransBeanBuilder {
         }
         builder.setRetryRequired(branchTransRequest.isRetryRequired());
         builder.setTimeout(UInt64Value.of(branchTransRequest.getTimeout()));
-        builder.setTimeOutType(UInt32Value.of(branchTransRequest.getTimeOutType()));
+        builder.setTimeOutType(UInt32Value.of(TimeoutType.valueOf(branchTransRequest.getTimeoutType()).getValue()));
         if(branchTransRequest.getTransactionName()!=null) {
             builder.setTransactionName(branchTransRequest.getTransactionName());
         }

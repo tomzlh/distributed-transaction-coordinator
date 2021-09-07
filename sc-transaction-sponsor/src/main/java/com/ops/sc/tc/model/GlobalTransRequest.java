@@ -27,7 +27,7 @@ public class GlobalTransRequest implements Serializable {
 
      private String timeoutType;
 
-     private String callMode;
+     //private String callMode;
 
      private String dataSource;
 
@@ -51,7 +51,7 @@ public class GlobalTransRequest implements Serializable {
           private boolean hasParent;
           private List<String> parentBranchNames;
           private long timeout;
-          private int timeOutType;
+          private String timeoutType;
           private boolean retryRequired;
           private int retryCount;
           private List<String> returnParams;

@@ -40,8 +40,7 @@ TCC事务/XA事务请求:
 	"transMode": "TCC",//事务模式TCC/SAGA/XA
 	"transCode": "A0101",//业务编码，必填，根据业务编号查询事务编排模型
 	"timeoutType": "CANCEL", //事务超时处理策略CANCEL/ALARM
-	"callMode": "SYNC", //调用的方式，同步调用（顺序）
-	"callInParallel": false,//并行，非顺序
+	"callInParallel": false,//是否并行，非顺序
 	"retryCount": 0, //重试次数
 	"branchTransRequests": [{ //分支请求
 		"branchTransName": "ta1", //分支编排的名字，必填，通过该名字查询编排表中的分支事务信息
@@ -52,7 +51,7 @@ TCC事务/XA事务请求:
 		},
 		"hasParent": false, //是否有父节点
 		"timeout": 100000, //分支超时时间
-		"timeOutType": 1, //超时处理策略
+		"timeOutType": "CANCEL", //事务超时处理策略CANCEL/ALARM
 		"retryRequired": false, //是否需要重试
 		"retryCount": 0 //重试次数
 	}, {
@@ -64,7 +63,7 @@ TCC事务/XA事务请求:
 		},
 		"hasParent": false,  //是否有父节点
 		"timeout": 100000, //分支超时时间
-		"timeOutType": 1, //超时处理策略
+		"timeOutType": "CANCEL", //事务超时处理策略CANCEL/ALARM
 		"retryRequired": false,  //是否需要重试
 		"retryCount": 0  //重试次数
 	}]
@@ -92,9 +91,8 @@ SAGA类型事务请求:
 }
 
 ## 编译部署说明
-1. 进入distributed-transaction-coordinator下的deploy目录：
-   执行buildsh下的build相关的脚本，编译出各个模块的部署包
-   编译完成后，在deploy目录下会出现编译的结果，以dtc-开头的相关目录。
+
+1.进入distributed-transaction-coordinator下执行mvn clean package, 然后进入的deploy目录：执行buildsh下的build相关的脚本，编译出各个模块的部署包编译完成后，在deploy目录下会出现编译的结果，以dtc-开头的相关目录。
    ![](images/deploy.jpg)
    
 2.执行sc-transaction-mybatis的resources/sql文件夹下面的mysql.sql所有的建表语句

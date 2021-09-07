@@ -20,7 +20,7 @@ message GlobalTransRequest {
     google.protobuf.UInt32Value callInParallel = 10;
     string rollbackInfo=11;
     string transType = 12;
-    string callMode = 13;
+    //string callMode = 13;
 
     message BranchTransDetail {
         string branchTransName = 1;
@@ -41,7 +41,7 @@ message GlobalTransRequest {
         repeated string value = 1;
     }
 
-    repeated BranchTransDetail branchTransDetails=14;
+    repeated BranchTransDetail branchTransDetails=13;
 
 }
 

@@ -20,10 +20,12 @@ XA 规范 描述了全局的事务管理器与局部的资源管理器之间的�
 <center>总体架构图</center>
 ### DTC Server
 DTC Server是DTC的核心部件，DTC Server的功能是接收Sponsor的分布式事务请求，然后对请求的参数进行校验。校验通过后，将请求的数据转换为分布式的bean（全局事务bean、分支事务bean），并且保存到数据库表中。数据保存成功后根据分布式事务模型进行分支事务的调用。如果分支事务执行成功则更新分支事务的状态，如果分支事务全部成功则更新全局事务为成功状态，如果分支事务执行失败则回滚分支事务，并更新全局事务的状态。最后将执行结果返回给Sponsor。
+
 ![](images/dtcserver.jpg)
 <center>DTSServer结构图</center>
 ### DTC Sponsor
-Sponsor是负责接入外部的业务请求，按照业务请求根据编排模型，将业务数据组装为事务的数据模型。通过GRPC接口发送给Server，Server处理之后将结果返回给Sponsor。Sponsor将结果返回给外部请求的服务。
+Sponsor是负责接入外部的业务请求，按照业务请求根据编排模型，将业务数据组装为事务的数据模型。通过GRPC接口发送给Server，Server处理之后将结果返回给Sponsor。Sponsor将结果返回给外部请求的服务.
+
 ![](images/DTCsponsor.jpg)
 <center>DTC Sponsor架构图</center>
 ### DTC Actuator
@@ -33,16 +35,19 @@ Acutator是分支事务的默认实现，如果分支业务方使用的是java�
 <center>DTC Actuator架构图</center>
 ### DTC Compensator
 Compensator模块是负责补偿异常事务补偿的服务以及数据清理的工作。通过定时任务的机制查下失败的任务，根据分支任务的状态和全局任务的状态设置处理机制（冲正/重试）。Compensator不负责具体的事务处理，而是将异常的任务发送给Server,由server负责具体的异常事务的处理。Compensator也会定时对数据表进行清理，保证数据表不至于过大导致性能严重下降。
+
 ![](images/DTCCompensator.jpg)
 <center>DTC Compensator架构图</center>
 ### DTC Admin
 admin模块是管理模块，负责事务数据的增、删、改、查，手动执行事务的重试/冲正。
+
 ![](images/DTCAdmin.jpg)
 <center>DTC Admin架构图</center>
 
 ## DTC 流程说明
 ### DTC 总体流程
 ![](images/dtc流程图.jpg)
+
 <center>DTC流程图</center>
 总体流程说明：
 1、外部服务发起分布式事务的业务流程请求给sponsor；
